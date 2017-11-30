@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.report.bean.Msg">
+
+    <typeAlias alias="Msg" type="com.report.bean.Msg"/>
+     <resultMap id="MsgResult" class="Msg">
+        <result property="id"          column="id"/>
+        <result property="userName"    column="userName"/>
+        <result property="msgDetail"    column="msgDetail"/>
+        <result property="createTime"    column="createTime"/>
+        <result property="isRead"      column="isRead"/>
+    </resultMap> 
+    
+    
+    <!--插入消息-->
+    <insert id="insertMsg" parameterClass="Msg">
+      insert msg(id,userName,msgDetail,createTime,isRead)
+      values(#id#,#userName#,#msgDetail#,#createTime#,#isRead#)    
+    </insert>
+    
+    <!-- 获取消息  -->
+    <select id="selectMsg" parameterClass="java.util.HashMap" resultClass="Msg">
+      select id,userName,msgDetail,createTime,isRead
+        from msg 
+       where userName = #userName#
+       order by createTime desc
+       limit #begin#,#end#
+    </select>
+    <!-- 根据用户Id获取用户信息 -->
+    <select id="selectMsgCount" parameterClass="String" resultClass="java.lang.Integer">
+       select count(id)
+        from msg 
+       where userName = #userName#
+    </select>
+    <!-- 根据主键来更新用户信息 -->  
+    <update id="setIsRead" parameterClass="String">
+      update msg set 
+      isRead = 'Y'
+      where id = #id#
+    </update>
+    
+    <!-- 获取当前用户未读的消息总条数 -->
+    <select id="getMsgCount" parameterClass="String" resultClass="java.lang.Integer">
+       select count(id)
+        from msg 
+       where userName = #userName# and isRead = 'N'
+    </select>
+</sqlMap>

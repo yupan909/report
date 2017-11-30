@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.report.bean.UserInfo">
+
+    <typeAlias alias="UserInfo" type="com.report.bean.UserInfo"/>
+     <resultMap id="UserInfoResult" class="UserInfo">
+        <result property="id"          column="id"/>
+        <result property="userName"    column="userName"/>
+        <result property="password"    column="password"/>
+        <result property="question"    column="question"/>
+        <result property="answer"      column="answer"/>
+        <result property="email"       column="email"/>
+        <result property="phoneNumber" column="phoneNumber"/>
+        <result property="qq"          column="qq"/>
+        <result property="realName"    column="realName"/>
+        <result property="cid"         column="cid"/>
+        <result property="companyName" column="companyName"/>
+        <result property="address"     column="address"/>
+        <result property="endTime"     column="endTime"/>
+    </resultMap> 
+    
+    <sql id="queryConditionForUserInfo">
+	    <dynamic prepend="WHERE">
+	         1 = 1
+	         
+	         <isNotEmpty  property="userName">
+	           AND userName like concat('%', #userName#,'%')
+	         </isNotEmpty >
+	         
+	         <isNotEmpty  property="realName">
+	           AND realName like concat('%', #realName#,'%') 
+	         </isNotEmpty >
+	  </dynamic>
+   </sql>
+    
+    <!-- 注册 -->
+    <insert id="insertUser" parameterClass="UserInfo">
+      insert userInfo(id,userName,password,question,answer,email,phoneNumber,qq,realName,cid,companyName,address,endTime)
+      values(#id#,#userName#,#password#,#question#,#answer#,#email#,#phoneNumber#,#qq#,#realName#,#cid#,#companyName#,#address#,#endTime#)    
+    </insert>
+    
+    <!-- 登陆  -->
+    <select id="selectUserByUserNameAndPassword" parameterClass="java.util.HashMap" resultClass="UserInfo">
+      select id,userName,password,question,answer,email,phoneNumber,qq,realName,cid,companyName,address,endTime
+        from userInfo 
+       where userName = #userName# and password = #password#
+    </select>
+    
+    <!-- 根据用户Id获取用户信息 -->
+    <select id="selectUserByUserName" parameterClass="java.util.HashMap" resultClass="UserInfo">
+       select id,userName,password,question,answer,email,phoneNumber,qq,realName,cid,companyName,address,endTime
+        from userInfo 
+       where userName = #userName#
+    </select>
+    
+    <!-- 根据主键来更新用户信息 -->  
+    <update id="updateUser" parameterClass="UserInfo">
+      update userInfo set 
+      password=#password#
+      where userName = #userName#
+    </update>
+    
+    <select id="selectUserInfoByUserNameAndAnswer" resultClass="UserInfo">
+       select id,userName,password,question,answer,email,phoneNumber,qq,realName,cid,companyName,address,endTime
+       from userInfo
+       where userName = #userName#
+         and answer = #answer#
+    </select>
+    
+    <select id="selectUserInfoForList" parameterClass="java.util.HashMap" resultClass="UserInfo">
+        select id,userName,password,question,answer,email,phoneNumber,qq,realName,cid,companyName,address,endTime
+        from userInfo 
+        <include refid="queryConditionForUserInfo"/>
+        and userName !='admin'
+        order by userName desc
+        limit #begin#,#end#
+    </select>
+    
+    <select id="selectUserInfoCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+       select count(id)
+       from userInfo 
+       <include refid="queryConditionForUserInfo"/>
+       and userName !='admin'
+    </select>
+    
+    <select id="selectUserInfoByPK" parameterClass="String" resultClass="UserInfo">
+       select id,userName,password,question,answer,email,phoneNumber,qq,realName,cid,companyName,address,endTime
+         from userInfo 
+        where id = #id# 
+    </select>
+    
+    <!-- 根据主键来更新用户信息 -->  
+    <update id="updateUserMySelf" parameterClass="UserInfo">
+      update userInfo set 
+      password=#password#,
+      question=#question#,
+      answer=#answer#,
+      email=#email#,
+      phoneNumber=#phoneNumber#,
+      qq=#qq#,
+      realName=#realName#,
+      cid=#cid#,
+      companyName=#companyName#,
+      address=#address#,
+      endTime=#endTime#
+      where userName = #userName#
+    </update>
+  
+</sqlMap>
