@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.report.bean.SubProjectAchievements">
+
+    <typeAlias alias="SubProjectAchievements" type="com.report.bean.SubProjectAchievements"/>
+     <resultMap id="SubProjectAchievementsResult" class="SubProjectAchievements">
+        <result property="id"          column="id"/>
+        <result property="pid"    column="pid"/>
+        <result property="achType"    column="achType"/>
+        <result property="achRank"    column="achRank"/>
+        <result property="achYjjd"      column="achYjjd"/>
+        <result property="achCgmc"       column="achCgmc"/>
+        <result property="achCgxs" column="achCgxs"/>
+        <result property="achCdr"          column="achCdr"/>
+    </resultMap> 
+    
+    <!-- 保存表体   -->
+    <insert id="insertSubProjectAchievements" parameterClass="SubProjectAchievements">
+      insert subProject_achievements(id,pid,achType,achRank,achYjjd,achCgmc,achCgxs,achCdr)
+      values(#id#,#pid#,#achType#,#achRank#,#achYjjd#,#achCgmc#,#achCgxs#,#achCdr#)    
+    </insert>
+    
+    <!-- 根据外键获取表体 -->
+    <select id="selectSubProjectAchievementsByPid" parameterClass="java.util.HashMap" resultClass="SubProjectAchievements">
+       select id,pid,achType,achRank,achYjjd,achCgmc,achCgxs,achCdr
+        from subProject_achievements 
+       where pid = #pid#
+         and achType = #achType#
+       ORDER BY achRank ASC  
+    </select>
+        
+    <!-- 根据外键删除表体-->  
+    <delete id="deleteSubProjectAchievementsByPid" parameterClass="String">
+       delete from subProject_achievements where pid = #pid#
+    </delete>
+  
+</sqlMap>
